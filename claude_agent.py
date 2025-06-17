@@ -15,7 +15,7 @@ import requests
 from datetime import datetime, timedelta
 
 # Configuration
-GEMINI_API_KEY = "AIzaSyA1TNnxoO491zkl_9hUOTMrwey6MvnRXgQ"  # Set your API key as environment variable
+GEMINI_API_KEY = "#####"  # Set your API key as environment variable
 GEMINI_MODEL = "gemini-2.0-flash"
 
 OLLAMA_BASE_URL = "http://localhost:11434"
