@@ -13,6 +13,9 @@ from tools import calendar, finance, health, weather, traffic, invite_people, wh
 from orchestrator import orchestrator_agent, AgentState
 from scheduler import scheduler_agent
 from messaging_agent import communication_agent
+from colorama import Fore, init
+# Initialize colorama
+init(autoreset=True)
 
 # ============================================================================
 # CONFIGURATION
