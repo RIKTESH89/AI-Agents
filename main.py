@@ -17,7 +17,7 @@ from messaging_agent import communication_agent
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
-GEMINI_API_KEY = "AIzaSyANPaxT6aGtcqRHqAQHe49EdWM4zdFWcIM" # IMPORTANT: Replace with your actual key
+GEMINI_API_KEY = "####" # IMPORTANT: Replace with your actual key
 GEMINI_MODEL = "gemini-1.5-flash"
 
 if GEMINI_API_KEY == "YOUR_GEMINI_API_KEY" or not GEMINI_API_KEY:
