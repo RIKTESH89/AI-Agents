@@ -6,22 +6,22 @@ from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, ToolMe
 from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
 from langchain_google_genai import ChatGoogleGenerativeAI
-import time
+from langchain_ollama import ChatOllama
 # Import agents, tools, and data from other files
 from data import event_planning_data, WEATHER_DATA
 from tools import calendar, finance, health, weather, traffic, invite_people, whatsapp_message, email_message
 from orchestrator import orchestrator_agent, AgentState
 from scheduler import scheduler_agent
 from messaging_agent import communication_agent
-from colorama import Fore, init
-# Initialize colorama
-init(autoreset=True)
 
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
-GEMINI_API_KEY = "####" # IMPORTANT: Replace with your actual key
+GEMINI_API_KEY = "AIzaSyA7Sa1heoOIbsZ20je4dOk_poamgeDCo3A" # IMPORTANT: Replace with your actual key
 GEMINI_MODEL = "gemini-1.5-flash"
+
+OLLAMA_BASE_URL = "http://localhost:11434"
+OLLAMA_MODEL = "hermes3:8b"
 
 if GEMINI_API_KEY == "YOUR_GEMINI_API_KEY" or not GEMINI_API_KEY:
     raise ValueError("Please replace 'YOUR_GEMINI_API_KEY' with your actual Google Generative AI API key.")
@@ -47,6 +47,12 @@ model = ChatGoogleGenerativeAI(
     temperature=0.1,
 )
 
+# model = ChatOllama(
+#     base_url=OLLAMA_BASE_URL,
+#     model=OLLAMA_MODEL,
+#     temperature=0.1
+# )
+
 # Bind tools to models
 scheduler_model = model.bind_tools(scheduler_tools)
 communication_model = model.bind_tools(communication_tools)
@@ -68,8 +74,14 @@ def route_after_orchestrator(state: AgentState) -> str:
 def route_after_scheduler(state: AgentState) -> str:
     """Route from scheduler agent."""
     messages = state["messages"]
-    if messages and hasattr(messages[-1], 'tool_calls') and messages[-1].tool_calls:
+    print("\n"+"========================================route afterscheduler agent entry point=======================================", messages)
+    if messages and hasattr(messages[-1], 'tool_calls') and messages[-1].tool_calls and isinstance(messages[-1], AIMessage):
         return "scheduler_tools"
+    # elif messages and hasattr(messages[-2], 'tool_calls') and messages[-2].tool_calls and isinstance(messages[-2], AIMessage) and isinstance(messages[-1], HumanMessage):
+    #     user_input = input("Do you want to proceed with the scheduled plan?")
+    #     state["messages"] = state["messages"]+[HumanMessage(content=user_input)]
+    #     return "scheduler"
+    # print("\n"+"========================================scheduler agent entry point=======================================", messages)
     return "communication"
 
 def route_after_communication(state: AgentState) -> str:
@@ -134,18 +146,21 @@ def create_event_planning_graph():
         route_after_scheduler,
         {
             "scheduler_tools": "scheduler_tools",
-            "communication": "communication"
+            "communication": "communication",
+            "scheduler": "scheduler"
         }
     )
     
-    graph.add_conditional_edges(
-        "scheduler_tools",
-        route_after_scheduler_tools,
-        {
-            "scheduler": "scheduler", 
-            "communication": "communication"
-        }
-    )
+    # graph.add_conditional_edges(
+    #     "scheduler_tools",
+    #     route_after_scheduler_tools,
+    #     {
+    #         "scheduler": "scheduler", 
+    #         "communication": "communication"
+    #     }
+    # )
+    
+    graph.add_edge("scheduler_tools", "scheduler")
     
     graph.add_conditional_edges(
         "communication",
@@ -156,13 +171,15 @@ def create_event_planning_graph():
         }
     )
     
-    graph.add_conditional_edges(
-        "communication_tools",
-        route_after_communication_tools,
-        {
-            "end": END
-        }
-    )
+    # graph.add_conditional_edges(
+    #     "communication_tools",
+    #     route_after_communication_tools,
+    #     {
+    #         "end": END
+    #     }
+    # )
+    
+    graph.add_edge("communication_tools", "communication")
     
     return graph.compile()
 
@@ -172,7 +189,7 @@ def create_event_planning_graph():
 
 def print_messages(messages):
     if not messages: return
-    for message in messages[-3:]: # Print last few messages for brevity
+    for message in messages[-10:]: # Print last few messages for brevity
         if isinstance(message, AIMessage): print(f"\n🤖 AI: {message.content}")
         elif isinstance(message, ToolMessage): print(f"\n🛠️ TOOL RESULT: {message.name} -> {message.content}")
         elif isinstance(message, HumanMessage): print(f"\n👤 USER: {message.content}")
@@ -235,14 +252,13 @@ def run_event_planning_system():
             final_state = None
             for step in app.stream(initial_state, stream_mode="values"):
                 final_state = step
-                time.sleep(0.5)
                 if "messages" in step:
                     print_messages(step["messages"])
                     
                 # Show current agent
                 current_agent = step.get("current_agent", "unknown")
-                print(f"\n📍 Current Agent: {current_agent.upper()}")
-                print("-" * 40)
+                # print(f"\n📍 Current Agent: {current_agent.upper()}")
+                # print("-" * 40)
             
             # Show final summary
             print("\n" + "="*60)
