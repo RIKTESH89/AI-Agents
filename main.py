@@ -17,7 +17,7 @@ from messaging_agent import communication_agent
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
-GEMINI_API_KEY = "AIzaSyA7Sa1heoOIbsZ20je4dOk_poamgeDCo3A" # IMPORTANT: Replace with your actual key
+GEMINI_API_KEY = "###" # IMPORTANT: Replace with your actual key
 GEMINI_MODEL = "gemini-1.5-flash"
 
 OLLAMA_BASE_URL = "http://localhost:11434"
