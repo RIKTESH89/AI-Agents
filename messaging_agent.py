@@ -3,6 +3,7 @@
 from langchain_core.messages import SystemMessage, AIMessage
 from orchestrator import AgentState
 from data import event_planning_data
+import time
 
 def communication_agent(state: AgentState, communication_model) -> AgentState:
     """Enhanced communication agent that intelligently selects communication channels."""
@@ -33,7 +34,12 @@ Choose wisely. After sending, summarize the communication strategy.""")
     
     all_messages = [system_prompt] + list(messages)
     response = communication_model.invoke(all_messages)
-    
+    print("\n"+"📍 Current Agent: COMMUNICATION AGENT")
+    print("-" * 40)
+    print("\n"+"User wants to communicate messages/invitations. Finding the best tools to use...")
+    time.sleep(1)
+    print("Initializing tools...")
+    time.sleep(1)
     return {
         "messages": [response],
         "current_agent": "communication", 
