@@ -26,6 +26,9 @@ def calendar(query: str) -> str:
     
     This tool provides date availability, suggests optimal time slots, and identifies potential conflicts.
     """
+    
+    print("\n"+"Checking calendar events and availability for specific dates and times.")
+    
     # Extract date information from query
     if "30th june" in query.lower() or "june 30" in query.lower():
         result = "📅 Calendar Check: June 30th is available! No conflicts found. Recommended time slots: 2:00 PM - 6:00 PM or 10:00 AM - 2:00 PM. Weekend timing is perfect for family gatherings."
@@ -102,9 +105,13 @@ def get_minimum_budget(event_type: str, guest_count: int) -> float:
     return per_person_cost * guest_count
 
 @tool
-def finance(query: str) -> str:
+def finance(amount:str, query: str) -> str:
     """
     Analyze budget requirements and provide cost estimates for events.
+    
+    ARGUMENTS:
+    - amount: int - Total budget for the event
+    - query: str - User query or description of the event
     
     WHEN TO USE:
     - Events involving significant expenses (parties, conferences, weddings, corporate events)
@@ -118,11 +125,12 @@ def finance(query: str) -> str:
     
     This tool provides detailed cost breakdowns, budget recommendations, and cost-saving suggestions.
     """
-    print("\n💰 BUDGET PLANNING ASSISTANT")
-    print("="*40)
+    # print("\n💰 BUDGET PLANNING ASSISTANT")
+    # print("="*40)
+    print("\n"+"Analyzing budget requirements and provide cost estimates for events.")
     
     try:
-        user_budget = input("Please enter your total budget for this event (in USD, numbers only): $")
+        user_budget = amount
         budget_amount = float(user_budget.replace('$', '').replace(',', ''))
     except ValueError:
         print("Invalid input. Using a default budget of $500.")
@@ -157,6 +165,8 @@ def health(query: str) -> str:
     
     This tool ensures safety compliance and inclusive planning for all attendees.
     """
+    print("\n"+"Checking health and safety considerations, dietary restrictions, and accessibility needs...")    
+    
     if any(keyword in query.lower() for keyword in ["food", "party"]):
         result = "🏥 Health & Safety Check for Food Events:\n- Common allergens to avoid: Nuts, dairy, gluten.\n- Ensure vegetarian/vegan options available.\n- Keep first aid kit accessible."
     elif "outdoor" in query.lower():
@@ -184,6 +194,7 @@ def weather(query: str) -> str:
     
     This tool provides weather forecasts and helps plan weather-contingent activities.
     """
+    print("\n"+"Getting weather forecasts and climate considerations for event planning.")
     query_lower = query.lower()
     
     if "june 30" in query_lower:
@@ -215,6 +226,8 @@ def traffic(query: str) -> str:
     
     This tool helps optimize guest arrival and provides transportation guidance.
     """
+    print("\n"+"Analyze transportation, parking, and accessibility for event venues.")
+    
     if "home" in query.lower():
         result = "🚗 Traffic & Transportation Analysis for Home Events:\n- Residential area with good access.\n- Recommend guests arrive 15-20 minutes early.\n- Street parking available."
     elif "downtown" in query.lower():
@@ -242,6 +255,9 @@ def invite_people(query: str) -> str:
     
     This tool creates appropriate invitations and manages guest list considerations.
     """
+    
+    print("\n"+"Generating invitation content and managing guest lists based on event type and formality.")
+    
     is_informal = any(word in query.lower() for word in ["birthday", "party", "home"])
     
     if is_informal:
