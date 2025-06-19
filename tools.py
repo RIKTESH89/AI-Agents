@@ -105,7 +105,7 @@ def get_minimum_budget(event_type: str, guest_count: int) -> float:
     return per_person_cost * guest_count
 
 @tool
-def finance(amount:str, query: str) -> str:
+def finance(query: str,amount:str = "$500") -> str:
     """
     Analyze budget requirements and provide cost estimates for events.
     
