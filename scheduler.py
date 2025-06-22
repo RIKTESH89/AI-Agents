@@ -1,8 +1,6 @@
 # scheduler.py
 
-from re import A
-import time
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, ToolMessage
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from orchestrator import AgentState
 from data import event_planning_data
 
@@ -26,20 +24,6 @@ Make sure to give the arguments for each tool in the correct format and if they 
 
 Be smart and efficient. After using tools, summarize and indicate readiness for communication.""")
     
-    if len(messages) >= 2 and isinstance(messages[-1], ToolMessage ):
-        print("\n"+"scheduler_agent() called with state===========================================>>>>>>>>>>>>>>>>>>", messages[-2])
-        user_input = input("Do you want to proceed with the scheduled plan?")
-        user_prompt = HumanMessage(content=user_input)
-        system_prompt = SystemMessage(content=f"""You are the Scheduler Agent for event planning. The user has answered to the question that he is satisfied with the plan. If he is not satisfied and he is giving some inputs, considering user's inputs, please provide the updated plan
-                                      using the 6 tools: calendar, finance, health, weather, traffic, invite_people. If the user is satisfied then do not use tool call and just give output as Scheduling already completed.""")  
-        all_messages = [system_prompt] + list(messages) + [user_prompt]
-        response = scheduler_model.invoke(all_messages)
-        print("\n"+"scheduler_agent() called with response===========================================>>>>>>>>>>>>>>>>>>", response)
-        return {
-            "messages": [response],
-            "current_agent": "scheduler", 
-            "next_action": "tools" if response.tool_calls else "communication"
-        }
     if event_planning_data.get("current_step") == "scheduling_complete":
         return {
             "messages": [AIMessage(content="Scheduling already completed.")],
@@ -52,15 +36,8 @@ Be smart and efficient. After using tools, summarize and indicate readiness for 
         all_messages.append(HumanMessage(content=f"Plan this event using relevant tools: {user_request}"))
     
     response = scheduler_model.invoke(all_messages)
-    event_planning_data["current_step"] = "scheduling_complete"
-    print("\n"+"📍 Current Agent: SCHEDULER AGENT")
-    print("-" * 40)
-    print("\n"+"Planning your event now...")
-    time.sleep(1)
-    print("\n"+"I'm working on your request and bringing in my specialized tools to create the perfect plan for your event.")
-    time.sleep(3)
-    print("\n"+"Please hold on for a moment. Your event schedule is being put together!")
-    time.sleep(2)
+    # event_planning_data["current_step"] = "scheduling_complete"
+    
     return {
         "messages": [response],
         "current_agent": "scheduler",
