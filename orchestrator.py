@@ -8,7 +8,7 @@ from data import event_planning_data
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
-    current_agent: str
+    current_agent: str 
     next_action: str
 
 def orchestrator_agent(state: AgentState) -> AgentState:
