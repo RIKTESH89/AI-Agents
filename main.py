@@ -23,9 +23,9 @@ GEMINI_API_KEY = "####" # IMPORTANT: Replace with your actual key
 GEMINI_MODEL = "gemini-1.5-flash"
 
 OLLAMA_BASE_URL = "http://localhost:11434"
-OLLAMA_MODEL = "hermes3:8b"
+OLLAMA_MODEL = "qwen2.5:32b"
 
-if GEMINI_API_KEY == "YOUR_GEMINI_API_KEY" or not GEMINI_API_KEY:
+if GEMINI_API_KEY:
     raise ValueError("Please replace 'YOUR_GEMINI_API_KEY' with your actual Google Generative AI API key.")
 
 # ============================================================================
@@ -41,10 +41,16 @@ scheduler_tool_node = ToolNode(scheduler_tools)
 communication_tool_node = ToolNode(communication_tools)
 
 # Model initialization
-model = ChatGoogleGenerativeAI(
-    model=GEMINI_MODEL,
-    google_api_key=GEMINI_API_KEY,
-    temperature=0.1,
+# model = ChatGoogleGenerativeAI(
+#     model=GEMINI_MODEL,
+#     google_api_key=GEMINI_API_KEY,
+#     temperature=0.1,
+# )
+
+model = ChatOllama(
+    base_url=OLLAMA_BASE_URL,
+    model=OLLAMA_MODEL,
+    temperature=0.1
 )
 
 # Bind tools to models
