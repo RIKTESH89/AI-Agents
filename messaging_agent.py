@@ -34,12 +34,12 @@ Choose wisely. After sending, summarize the communication strategy.""")
     
     all_messages = [system_prompt] + list(messages)
     response = communication_model.invoke(all_messages)
-    print("\n"+"📍 Current Agent: COMMUNICATION AGENT")
-    print("-" * 40)
-    print("\n"+"User wants to communicate messages/invitations. Finding the best tools to use...")
-    time.sleep(1)
-    print("Initializing tools...")
-    time.sleep(1)
+    # print("\n"+"📍 Current Agent: COMMUNICATION AGENT")
+    # print("-" * 40)
+    # print("\n"+"User wants to communicate messages/invitations. Finding the best tools to use...")
+    # time.sleep(1)
+    # print("Initializing tools...")
+    # time.sleep(1)
     return {
         "messages": [response],
         "current_agent": "communication", 
