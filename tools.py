@@ -27,7 +27,7 @@ def calendar(query: str) -> str:
     This tool provides date availability, suggests optimal time slots, and identifies potential conflicts.
     """
     
-    print("\n"+"Checking calendar events and availability for specific dates and times.")
+    # print("\n"+"Checking calendar events and availability for specific dates and times.")
     
     # Extract date information from query
     if "30th june" in query.lower() or "june 30" in query.lower():
@@ -127,7 +127,7 @@ def finance(query: str,amount:str = "$500") -> str:
     """
     # print("\n💰 BUDGET PLANNING ASSISTANT")
     # print("="*40)
-    print("\n"+"Analyzing budget requirements and provide cost estimates for events.")
+    # print("\n"+"Analyzing budget requirements and provide cost estimates for events.")
     
     try:
         user_budget = amount
@@ -165,7 +165,7 @@ def health(query: str) -> str:
     
     This tool ensures safety compliance and inclusive planning for all attendees.
     """
-    print("\n"+"Checking health and safety considerations, dietary restrictions, and accessibility needs...")    
+    # print("\n"+"Checking health and safety considerations, dietary restrictions, and accessibility needs...")    
     
     if any(keyword in query.lower() for keyword in ["food", "party"]):
         result = "🏥 Health & Safety Check for Food Events:\n- Common allergens to avoid: Nuts, dairy, gluten.\n- Ensure vegetarian/vegan options available.\n- Keep first aid kit accessible."
@@ -194,7 +194,7 @@ def weather(query: str) -> str:
     
     This tool provides weather forecasts and helps plan weather-contingent activities.
     """
-    print("\n"+"Getting weather forecasts and climate considerations for event planning.")
+    # print("\n"+"Getting weather forecasts and climate considerations for event planning.")
     query_lower = query.lower()
     
     if "june 30" in query_lower:
@@ -226,7 +226,7 @@ def traffic(query: str) -> str:
     
     This tool helps optimize guest arrival and provides transportation guidance.
     """
-    print("\n"+"Analyze transportation, parking, and accessibility for event venues.")
+    # print("\n"+"Analyze transportation, parking, and accessibility for event venues.")
     
     if "home" in query.lower():
         result = "🚗 Traffic & Transportation Analysis for Home Events:\n- Residential area with good access.\n- Recommend guests arrive 15-20 minutes early.\n- Street parking available."
@@ -256,7 +256,7 @@ def invite_people(query: str) -> str:
     This tool creates appropriate invitations and manages guest list considerations.
     """
     
-    print("\n"+"Generating invitation content and managing guest lists based on event type and formality.")
+    # print("\n"+"Generating invitation content and managing guest lists based on event type and formality.")
     
     is_informal = any(word in query.lower() for word in ["birthday", "party", "home"])
     
