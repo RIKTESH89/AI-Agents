@@ -1480,8 +1480,8 @@ WEATHER_DATA = {
             "🧤 December 30th Forecast:\n- Temperature: 27-36°F (-3-2°C)\n- Still cold, but the sun is a nice sight."
         ],
         "december_31": [
-            "🎉 New Year's Eve Forecast:\n- Temperature: 25-34°F (-4-1°C)\n- Clear and very cold for evening celebrations\n- Precipitation Chance: 10%\n- Bundle up to ring in the new year!",
-            "🍾 December 31st Weather:\n- Temperature: 26-35°F (-3-2°C)\n- Dry and frigid for watching the ball drop.\n- A cold, crisp end to the year."
+            "New Year's Eve Forecast:\n- Temperature: 25-34°F (-4-1°C)\n- Clear and very cold for evening celebrations\n- Precipitation Chance: 10%\n- Bundle up to ring in the new year!",
+            "December 31st Weather:\n- Temperature: 26-35°F (-3-2°C)\n- Dry and frigid for watching the ball drop.\n- A cold, crisp end to the year."
         ]
     },
     

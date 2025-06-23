@@ -4,13 +4,14 @@ import random
 from datetime import datetime
 from langchain_core.tools import tool
 from data import event_planning_data, WEATHER_DATA
+from typing import Optional
 
 # ============================================================================
 # ENHANCED SCHEDULER AGENT TOOLS (6 tools)
 # ============================================================================
 
 @tool
-def calendar(query: str) -> str:
+def calendar(query: str, date: Optional[int] = None, month: Optional[int] = None, periodic_event: bool = False) -> str:
     """
     Check calendar events and availability for specific dates and times.
     
@@ -25,19 +26,35 @@ def calendar(query: str) -> str:
     ❌ Skip for: Simple reminders, one-time tasks without specific timing
     
     This tool provides date availability, suggests optimal time slots, and identifies potential conflicts.
+    
+    Args:
+        date (int, optional): date of the event to be scheduled
+        month (int, optional): month of the event to be scheduled
+        query (str): user query to be used for scheduling
+        periodic_event (bool, optional): indicates if the event is periodic (e.g., monthly, yearly)
+    Returns:
+        str: A detailed description of the calendar check and potential conflicts.
     """
     
-    # print("\n"+"Checking calendar events and availability for specific dates and times.")
-    
-    # Extract date information from query
-    if "30th june" in query.lower() or "june 30" in query.lower():
-        result = "📅 Calendar Check: June 30th is available! No conflicts found. Recommended time slots: 2:00 PM - 6:00 PM or 10:00 AM - 2:00 PM. Weekend timing is perfect for family gatherings."
-    elif any(keyword in query.lower() for keyword in ["birthday", "party", "celebration"]):
-        result = "📅 Calendar Analysis: Weekend dates are optimal for parties. Multiple time slots available. Consider 2-6 PM for family events or 7-11 PM for adult celebrations."
-    elif any(keyword in query.lower() for keyword in ["meeting", "conference", "business"]):
-        result = "📅 Calendar Check: Weekday business hours available. Recommended slots: 10:00 AM - 12:00 PM or 2:00 PM - 4:00 PM. Conference rooms available."
+    # Initialize the result string based on whether a specific date was provided
+    if date and month:
+        result = f"📅 Calendar Check: The date {month}/{date} is available! No conflicts found. Weekend timing is perfect for family gatherings. "
     else:
-        result = f"📅 Calendar checked for: {query}. Available time slots found. No major conflicts detected."
+        result = f"📅 Calendar checked for: {query}. Available time slots found. Saturday and Sunday will be perfect for family gatherings. "
+        
+    # FIX: Use the 'random_val' variable instead of the 'random' module.
+    # This was causing a TypeError.
+    random_val = random.randint(1, 100)
+    if random_val % 2 == 0:
+        result += "Found a conflict with another event: 'Pick up kids from school'. Please adjust your schedule."
+    else:
+        # Add suggestions based on event type
+        if any(keyword in query.lower() for keyword in ["birthday", "party", "celebration"]):
+            result += "Multiple time slots available. Consider 2-6 PM for family events or 7-11 PM for adult celebrations."
+        elif any(keyword in query.lower() for keyword in ["meeting", "conference", "business"]):
+            result += "Recommended slots: 10:00 AM - 12:00 PM or 2:00 PM - 4:00 PM. Conference rooms available."
+        else:
+            result += f"Available time slots found. No major conflicts detected."
     
     event_planning_data["calendar_info"] = result
     return result
@@ -105,7 +122,7 @@ def get_minimum_budget(event_type: str, guest_count: int) -> float:
     return per_person_cost * guest_count
 
 @tool
-def finance(query: str,amount:str = "$500") -> str:
+def finance(query: str, amount: int = 500) -> str:
     """
     Analyze budget requirements and provide cost estimates for events.
     
@@ -124,17 +141,23 @@ def finance(query: str,amount:str = "$500") -> str:
     ❌ Skip for: Simple meetings, small gatherings (under 5 people), free events
     
     This tool provides detailed cost breakdowns, budget recommendations, and cost-saving suggestions.
-    """
-    # print("\n💰 BUDGET PLANNING ASSISTANT")
-    # print("="*40)
-    # print("\n"+"Analyzing budget requirements and provide cost estimates for events.")
     
-    try:
-        user_budget = amount
-        budget_amount = float(user_budget.replace('$', '').replace(',', ''))
-    except ValueError:
-        print("Invalid input. Using a default budget of $500.")
-        budget_amount = 500.0
+    Args:
+        amount (int): Amount of money to be used for the event. Defaults to 500.
+        query (str): User query or description of the event.
+    Returns:
+        str: A detailed description of the budget analysis and cost-saving suggestions.
+    """
+    # FIX: Initialize 'result' to an empty string to prevent an UnboundLocalError
+    # if the budget is not over 1000.
+    result = ""
+    
+    # FIX: The signature now correctly uses an integer default.
+    # The logic is simplified to directly use the integer amount.
+    budget_amount = float(amount)
+    
+    if budget_amount > 1000:
+        result = "Warning: 💰 Budget exceeds your general savings. Still, I'll go ahead and provide a detailed budget breakdown.\n"
     
     event_type = "general"
     if "birthday" in query.lower(): event_type = "birthday_party"
@@ -144,7 +167,8 @@ def finance(query: str,amount:str = "$500") -> str:
     guest_matches = re.findall(r'(\d+)\s*(?:people|guests)', query.lower())
     guest_count = int(guest_matches[0]) if guest_matches else 20
     
-    result = create_budget_breakdown(event_type, budget_amount, guest_count, query)
+    # Now it's safe to use +=
+    result += create_budget_breakdown(event_type, budget_amount, guest_count, query)
     event_planning_data["finance_info"] = result
     return result
 
@@ -164,9 +188,12 @@ def health(query: str) -> str:
     ❌ Skip for: Simple meetings without food, small familiar groups, virtual events
     
     This tool ensures safety compliance and inclusive planning for all attendees.
-    """
-    # print("\n"+"Checking health and safety considerations, dietary restrictions, and accessibility needs...")    
     
+    Args:
+        query (str): User query or description of the event
+    Returns:
+        str: A detailed description of health considerations and climate needs.
+    """
     if any(keyword in query.lower() for keyword in ["food", "party"]):
         result = "🏥 Health & Safety Check for Food Events:\n- Common allergens to avoid: Nuts, dairy, gluten.\n- Ensure vegetarian/vegan options available.\n- Keep first aid kit accessible."
     elif "outdoor" in query.lower():
@@ -178,7 +205,7 @@ def health(query: str) -> str:
     return result
 
 @tool
-def weather(query: str) -> str:
+def weather(query: str, date: Optional[int] = None, month: Optional[int] = None) -> str:
     """
     Get weather forecasts and climate considerations for event planning.
     
@@ -193,12 +220,34 @@ def weather(query: str) -> str:
     ❌ Skip for: Indoor events, virtual meetings, events in climate-controlled venues
     
     This tool provides weather forecasts and helps plan weather-contingent activities.
+    
+    Args:
+        query (str): User query or description of the event.
+        date (int, optional): Date of the event to be scheduled.
+        month (int, optional): Month of the event to be scheduled (as a number 1-12).
+    Returns:
+        str: A detailed description of weather considerations and climate needs.
     """
-    # print("\n"+"Getting weather forecasts and climate considerations for event planning.")
     query_lower = query.lower()
     
-    if "june 30" in query_lower:
-        result = random.choice(WEATHER_DATA["specific_dates"]["june_30"])
+    # FIX: The logic is now mutually exclusive using if/elif. This prevents
+    # a general query like "outdoor party" from overwriting a specific date forecast.
+    if date and month:
+        try:
+            # Convert month number to name to match the WEATHER_DATA structure
+            month_name = datetime(2024, month, 1).strftime('%B').lower()
+            date_val = f"{month_name}_{date}"
+            
+            # Check if the specific date exists in our data
+            if date_val in WEATHER_DATA["specific_dates"]:
+                result = random.choice(WEATHER_DATA["specific_dates"][date_val])
+            else:
+                # Fallback to a general forecast if the date is not found
+                result = f"☀️ No specific forecast for {month_name} {date}. General forecast: " + random.choice(WEATHER_DATA["general_forecasts"])
+        except (ValueError, KeyError):
+            # Handle cases with invalid month numbers or other errors
+            result = "Could not retrieve specific date forecast. " + random.choice(WEATHER_DATA["general_forecasts"])
+
     elif "outdoor" in query_lower:
         result = random.choice(WEATHER_DATA["outdoor_events"])
     elif "spring" in query_lower:
@@ -226,8 +275,6 @@ def traffic(query: str) -> str:
     
     This tool helps optimize guest arrival and provides transportation guidance.
     """
-    # print("\n"+"Analyze transportation, parking, and accessibility for event venues.")
-    
     if "home" in query.lower():
         result = "🚗 Traffic & Transportation Analysis for Home Events:\n- Residential area with good access.\n- Recommend guests arrive 15-20 minutes early.\n- Street parking available."
     elif "downtown" in query.lower():
@@ -255,9 +302,6 @@ def invite_people(query: str) -> str:
     
     This tool creates appropriate invitations and manages guest list considerations.
     """
-    
-    # print("\n"+"Generating invitation content and managing guest lists based on event type and formality.")
-    
     is_informal = any(word in query.lower() for word in ["birthday", "party", "home"])
     
     if is_informal:
