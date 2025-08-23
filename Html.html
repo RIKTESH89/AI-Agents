@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mira's Birthday Plan</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(180deg, #ffffff, #f8f3ff);
+      color: #1a1a1a;
+      line-height: 1.4;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 600;
+      margin: 0 0 5px;
+    }
+
+    p.subtext {
+      font-size: 15px;
+      color: #6e6e6e;
+      margin: 0 0 15px;
+    }
+
+    /* Thumbnails row */
+    .images-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .images-row img {
+      width: 110px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 16px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    p.desc {
+      font-size: 14px;
+      color: #5a5a5a;
+      margin: 0 0 20px;
+    }
+
+    /* Button */
+    .btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #8b5cf6, #6d28d9);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(109,40,217,0.3);
+      margin-bottom: 25px;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #7c3aed, #5b21b6);
+    }
+
+    /* Cards */
+    .card-container {
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    .card {
+      min-width: 210px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .card img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 14px;
+    }
+
+    .card-content h3 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .card-content p {
+      margin: 0;
+      font-size: 13px;
+      color: #666;
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+      .images-row img {
+        width: 95px;
+        height: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Lets Plan Mira's Birthday!</h1>
+  <p class="subtext">Last year’s party was really fun!</p>
+
+  <div class="images-row">
+    <img src="https://via.placeholder.com/110x80?text=Pic1" alt="img1">
+    <img src="https://via.placeholder.com/110x80?text=Pic2" alt="img2">
+    <img src="https://via.placeholder.com/110x80?text=Pic3" alt="img3">
+  </div>
+
+  <h2>I have a few ideas for this year’s celebrations</h2>
+  <p class="desc">
+    Taking inspiration from activities you both are involved in, here are some party ideas.
+  </p>
+
+  <a href="#" class="btn">Get Thinking</a>
+
+  <div class="card-container">
+    <div class="card">
+      <img src="https://via.placeholder.com/210x130?text=Cozy+Party" alt="Cozy Party">
+      <div class="card-content">
+        <h3>Cozy party at Home</h3>
+        <p>Kickstart the birthday on Wed, Jan 08</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://via.placeholder.com/210x130?text=Game+Night" alt="Game Night">
+      <div class="card-content">
+        <h3>Game Night at Carmine’s pizza</h3>
+        <p>Saturday, Jan 06</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
